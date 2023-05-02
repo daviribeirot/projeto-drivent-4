@@ -27,8 +27,6 @@ async function verifyRoom(roomId: number) {
 }
 
 async function getBookings(userId: number) {
-  await verifyTicketAndEnrollment(userId);
-
   const booking = await bookingRepository.getBookings(userId);
 
   if (!booking) throw notFoundError();
