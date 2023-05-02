@@ -21,11 +21,9 @@ async function verifyTicketAndEnrollment(userId: number) {
 async function getBookings(userId: number) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
 
-  if (!enrollment) throw notFoundError();
-
   const booking = await bookingRepository.getBookings(userId);
 
-  if (!booking) throw notFoundError();
+  if (!booking || !enrollment) throw notFoundError();
 
   return booking;
 }
@@ -49,13 +47,9 @@ async function updateBooking(bookingId: number, userId: number, roomId: number) 
 
   const room = await hotelRepository.getRoomAndBookingById(roomId);
 
-  if (!room) throw forbiddenError();
+  if (!room) throw notFoundError();
 
   if (room.capacity <= room.Booking.length) throw forbiddenError();
-
-  const booking = await bookingRepository.getBookingByUser(userId, bookingId);
-
-  if (!booking) throw forbiddenError();
 
   const updatedBooking = await bookingRepository.updateBooking(bookingId, roomId, userId);
 

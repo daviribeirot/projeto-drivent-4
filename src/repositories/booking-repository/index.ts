@@ -21,15 +21,16 @@ async function getBookings(userId: number) {
   });
 }
 
-async function getBookingByUser(userId: number, bookingId: number) {
+async function getBookingByUserId(userId: number) {
   return prisma.booking.findFirst({
     where: {
       userId,
-      id: bookingId,
+    },
+    include: {
+      Room: true,
     },
   });
 }
-
 async function updateBooking(roomId: number, bookingId: number, userId: number) {
   return await prisma.booking.update({
     where: {
@@ -45,7 +46,7 @@ async function updateBooking(roomId: number, bookingId: number, userId: number) 
 const bookingRepository = {
   insertBooking,
   getBookings,
-  getBookingByUser,
+  getBookingByUserId,
   updateBooking,
 };
 

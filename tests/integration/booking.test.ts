@@ -46,4 +46,34 @@ describe('GET /booking', () => {
     const result = await server.get('/booking').set('Authorization', `Bearer ${token}`);
     expect(result.status).toEqual(httpStatus.UNAUTHORIZED);
   });
+
+  describe('GET /booking with valid token', () => {
+    it('should respond with status 404 if there is no booking', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const result = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+      expect(result.status).toEqual(httpStatus.NOT_FOUND);
+    });
+
+    it('should respond with status 200 if there are bookings', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const hotel = await createHotel();
+      const room = await createRoomWithHotelId(hotel.id);
+      const booking = await createBooking(user.id, room.id);
+      const result = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+      expect(result.status).toEqual(httpStatus.OK);
+      expect(result.body).toEqual({
+        id: booking.id,
+        Room: {
+          id: room.id,
+          name: room.name,
+          capacity: room.capacity,
+          hotelId: room.hotelId,
+          createdAt: room.createdAt.toISOString(),
+          updatedAt: room.updatedAt.toISOString(),
+        },
+      });
+    });
+  });
 });
