@@ -9,6 +9,8 @@ export async function getBooking(req: AuthenticatedRequest, res: Response, next:
   try {
     const booking = bookingService.getBookings(userId);
 
+    if (!booking) return res.sendStatus(httpStatus.NOT_FOUND);
+
     return res.status(httpStatus.OK).send(booking);
   } catch (error) {
     next(error);
