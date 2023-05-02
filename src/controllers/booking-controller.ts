@@ -3,17 +3,15 @@ import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
 import bookingService from '@/services/booking-service';
 
-export async function getBooking(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export async function getBooking(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
 
   try {
     const booking = bookingService.getBookings(userId);
 
-    if (!booking) return res.sendStatus(httpStatus.NOT_FOUND);
-
     return res.status(httpStatus.OK).send(booking);
   } catch (error) {
-    next(error);
+    return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
 
