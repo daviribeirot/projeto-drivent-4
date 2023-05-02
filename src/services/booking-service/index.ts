@@ -7,9 +7,11 @@ import hotelRepository from '@/repositories/hotel-repository';
 async function verifyTicketAndEnrollment(userId: number) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
 
+  if (!enrollment) throw notFoundError();
+
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
 
-  if (!enrollment || !ticket) throw notFoundError();
+  if (!ticket) throw notFoundError();
 
   if (ticket.status !== 'PAID' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
     throw forbiddenError();
@@ -45,11 +47,13 @@ async function insertBooking(userId: number, roomId: number) {
 }
 
 async function updateBooking(bookingId: number, userId: number, roomId: number) {
+  await verifyTicketAndEnrollment(userId);
+
   await verifyRoom(roomId);
 
-  const booking = await bookingRepository.getBookingById(bookingId);
+  const booking = await bookingRepository.getBookings(userId);
 
-  if (!booking) throw forbiddenError();
+  if (!booking || booking.id !== bookingId) throw forbiddenError();
 
   const updatedBooking = await bookingRepository.updateBooking(bookingId, roomId);
 
