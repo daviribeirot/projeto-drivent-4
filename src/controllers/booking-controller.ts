@@ -13,6 +13,8 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
 
     return res.status(httpStatus.OK).send(booking);
   } catch (error) {
+    if (error.name === 'ForbiddenError') return res.sendStatus(httpStatus.FORBIDDEN);
+
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
