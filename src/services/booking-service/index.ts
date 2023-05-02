@@ -49,7 +49,7 @@ async function updateBooking(bookingId: number, userId: number, roomId: number) 
 
   await verifyRoom(roomId);
 
-  const booking = await bookingRepository.getUserBooking(userId, bookingId);
+  const booking = await bookingRepository.getBookingById(bookingId);
 
   if (!booking) throw forbiddenError();
 

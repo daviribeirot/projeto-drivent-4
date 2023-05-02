@@ -14,16 +14,16 @@ async function getBookings(userId: number) {
     where: {
       userId,
     },
-    include: {
+    select: {
+      id: true,
       Room: true,
     },
   });
 }
 
-async function getUserBooking(userId: number, bookingId: number) {
+async function getBookingById(bookingId: number) {
   return prisma.booking.findFirst({
     where: {
-      userId,
       id: bookingId,
     },
   });
@@ -43,7 +43,7 @@ async function updateBooking(roomId: number, bookingId: number) {
 const bookingRepository = {
   insertBooking,
   getBookings,
-  getUserBooking,
+  getBookingById,
   updateBooking,
 };
 

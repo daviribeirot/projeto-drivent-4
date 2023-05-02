@@ -9,8 +9,6 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
   try {
     const booking = bookingService.getBookings(userId);
 
-    if (!booking) return res.sendStatus(httpStatus.NOT_FOUND);
-
     return res.status(httpStatus.OK).send(booking);
   } catch (error) {
     if (error.name === 'ForbiddenError') return res.sendStatus(httpStatus.FORBIDDEN);
