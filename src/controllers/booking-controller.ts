@@ -22,7 +22,7 @@ export async function insertBooking(req: AuthenticatedRequest, res: Response) {
   const { roomId } = req.body;
 
   try {
-    if (!roomId) return res.sendStatus(httpStatus.BAD_REQUEST);
+    if (!roomId) return res.sendStatus(httpStatus.FORBIDDEN);
 
     const booking = await bookingService.insertBooking(userId, roomId);
 
@@ -40,7 +40,7 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response) {
   const { bookingId } = req.params;
 
   try {
-    if (!roomId || !bookingId) return res.sendStatus(httpStatus.BAD_REQUEST);
+    if (!roomId || !bookingId) return res.sendStatus(httpStatus.FORBIDDEN);
 
     const updatedBooking = await bookingService.updateBooking(userId, roomId, Number(bookingId));
 

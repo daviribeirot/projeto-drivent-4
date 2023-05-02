@@ -45,8 +45,6 @@ async function insertBooking(userId: number, roomId: number) {
 }
 
 async function updateBooking(bookingId: number, userId: number, roomId: number) {
-  await verifyTicketAndEnrollment(userId);
-
   await verifyRoom(roomId);
 
   const booking = await bookingRepository.getBookingById(bookingId);
