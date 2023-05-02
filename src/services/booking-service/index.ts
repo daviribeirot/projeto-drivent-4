@@ -9,7 +9,7 @@ async function verifyTicketAndEnrollment(userId: number) {
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
 
-  if (!ticket || !enrollment) throw notFoundError();
+  if (!enrollment || !ticket) throw notFoundError();
 
   if (ticket.status !== 'PAID' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
     throw forbiddenError();
@@ -27,8 +27,6 @@ async function verifyRoom(roomId: number) {
 }
 
 async function getBookings(userId: number) {
-  await verifyTicketAndEnrollment(userId);
-
   const booking = await bookingRepository.getBookings(userId);
 
   if (!booking) throw notFoundError();
