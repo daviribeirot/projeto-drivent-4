@@ -1,9 +1,9 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
 import bookingService from '@/services/booking-service';
 
-export async function getBooking(req: AuthenticatedRequest, res: Response) {
+export async function getBooking(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { userId } = req;
 
   try {
@@ -11,13 +11,11 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
 
     return res.status(httpStatus.OK).send(booking);
   } catch (error) {
-    if (error.name === 'ForbiddenError') return res.sendStatus(httpStatus.FORBIDDEN);
-
-    return res.sendStatus(httpStatus.NOT_FOUND);
+    next(error);
   }
 }
 
-export async function insertBooking(req: AuthenticatedRequest, res: Response) {
+export async function insertBooking(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { userId } = req;
   const { roomId } = req.body;
 
@@ -28,13 +26,11 @@ export async function insertBooking(req: AuthenticatedRequest, res: Response) {
 
     return res.status(httpStatus.OK).send({ bookingId: booking.id });
   } catch (error) {
-    if (error.name === 'ForbiddenError') return res.sendStatus(httpStatus.FORBIDDEN);
-
-    return res.sendStatus(httpStatus.NOT_FOUND);
+    next(error);
   }
 }
 
-export async function updateBooking(req: AuthenticatedRequest, res: Response) {
+export async function updateBooking(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { userId } = req;
   const { roomId } = req.body;
   const { bookingId } = req.params;
@@ -46,8 +42,6 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response) {
 
     return res.status(httpStatus.OK).send({ bookingId: updatedBooking.id });
   } catch (error) {
-    if (error.name === 'ForbiddenError') return res.sendStatus(httpStatus.FORBIDDEN);
-
-    return res.sendStatus(httpStatus.NOT_FOUND);
+    next(error);
   }
 }
